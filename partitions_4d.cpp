@@ -14,17 +14,15 @@ typedef pair<pii, int> piii;
 const int MAX = 100;
 
 ll c[MAX+1];
-ll d[MAX+1];            // d[i] = no of topological sequences of index i
-int cc[MAX+1][MAX+1];   // no. of columns in given plane,row
-int pp, n;              // no. of planes and n
-piii x[MAX+1]; int k;   // the sequence of positions and its depth
+ll d[MAX+1];
+int cc[MAX+1][MAX+1];
+int pp, n;
+piii x[MAX+1]; int k;
 int curidx;
 int count=0;
 int shape[MAX+1][MAX+1][MAX+1];
 vector<int> indx;
 
-// a[i] = number of 1-d partitions of sum i //
-/**********************************OTHER CODE**************************/
 struct tp
 {
     int x;
@@ -131,8 +129,8 @@ void generate_topological_sequences2() {
   gen2();
 }
 
-/**********************************************************************/
 ll a[MAX+1];
+
 void calculate_1d(int n) {
   for(int i=0; i<=n; i++) a[i]=1;
   for(int k=2; k<=n; k++)
@@ -160,7 +158,6 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
     p++;
     }
     printf("shape\n");
-    //generate_topological_sequences2();
 }
 
 
@@ -174,7 +171,6 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
     }
 
     generate_topological_sequences2();
-    //printArray(shape);
     count++;
 
     for(int i=1;i<=n1;i++)
@@ -205,7 +201,6 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
         t--;
 
         generate_topological_sequences2();
-        //printArray(shape);
         count++;
 
         for(int i=1;i<=k;i++)
@@ -220,14 +215,7 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
             shape[1][1][t]=0;
             t--;j--;
         }
-
-        //printArray(shape);
-
     }
-    /*cout << endl;
-    for (int i = 0; i < n1; i++)
-        cout << p1[i] << " ";
-    cout << endl;*/
 }
 
 void shapeParts(int n1)
@@ -287,8 +275,8 @@ void shapeParts(int n1)
     }
 }
 
+//TODO: Create BM function
 
-/************** GENERATING TOPOLOGICAL SEQUENCES *****************/
 
 
 bool possible(int x, int y, int z) {
@@ -304,7 +292,7 @@ void include(int p, int y, int z) {
   if(x[k-1] > x[k]){
       indx.push_back(k-1);
       curidx += (k-1);
-  } // if x[k-1] becomes interesting on adding x[k], then increment current index (curidx) by (k-1)    }
+  }
 }
 void exclude(int p, int y, int z) {
   if(x[k-1] > x[k]){
@@ -317,7 +305,6 @@ void exclude(int p, int y, int z) {
 
 
 void printconfig() {
-    //for(int i=1; i<=k; i++) printf("(%d,%d,%d)  ", x[i].first.first, x[i].first.second, x[i].second); printf("%d\n", curidx+k);
 
     memset(shape, 0, sizeof(shape));
     //printf("\nLet's do it:%d\n",indx.size());
@@ -330,17 +317,15 @@ void printconfig() {
 
  }
 
-// count the current config and make ur next move
+
 void gen() {
   if(curidx + k > n) return;
-  //if(curidx + k != n)
-  //shapeParts(n-k-curidx);
+
   if(x[k].first!=pii(1,1)){
       indx.push_back(k);
       printconfig();
       d[curidx+k]++;
       indx.pop_back();
-      //shapeParts(n-k-curidx);
   }
   int p, r, c;
   for(p=1; p<=n; p++) {
@@ -369,8 +354,7 @@ void generate_topological_sequences(int nn) {
   n = nn;
   gen();
 }
-//////////////////////////////////////////////
-// assumes generate_topological_sequences() and calculate_1d() have been called
+
 
 void calculate_3d_correct(int n) {
   memset(c, 0, sizeof(c));
@@ -400,7 +384,6 @@ int main() {
   printf("Is it though?? = %d\n", count);
 
   cout<<"\n Let's see:\n";
-  //generate_topological_sequences2();
 
 
   printf("Number of topos of given shape:");
@@ -409,5 +392,4 @@ int main() {
       if(d2[i]!=0)
           printf("d[%d] = %lld\n", i, d2[i]);
   }
- // return 0;
 }
