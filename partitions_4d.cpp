@@ -22,9 +22,12 @@ int curidx;
 int count=0;
 int shape[MAX+1][MAX+1][MAX+1];
 vector<int> indx;
+ll d2[MAX+1];
+int cc2[MAX+1][MAX+1][MAX+1];
+int k2,curidx2;
+ll a[MAX+1];
 
-struct tp
-{
+struct tp{
     int x;
     int y;
     int z;
@@ -37,8 +40,7 @@ struct tp
     }
 };
 
-struct tpp
-{
+struct tpp{
     tp tr;
     int t;
 
@@ -58,12 +60,8 @@ struct tpp
     }
 };
 
-
-ll d2[MAX+1];
-int cc2[MAX+1][MAX+1][MAX+1];
 tpp x2[MAX+1];
 tp origin={1,1,1};
-int k2,curidx2;
 
 bool possible(int x, int y, int z,int t) {
   if(x>1 && cc2[x-1][y][z] < t) return 0;
@@ -85,11 +83,9 @@ void exclude(int p, int y, int z,int t) {
   if(x2[k2-1] > x2[k2]){
       curidx2 -= (k2-1);
   }
-cc2[p][y][z]--;
-k2--;
+  cc2[p][y][z]--;
+  k2--;
 }
-
-
 
 void gen2() {
   if( k2 > n) return;
@@ -129,8 +125,6 @@ void generate_topological_sequences2() {
   gen2();
 }
 
-ll a[MAX+1];
-
 void calculate_1d(int n) {
   for(int i=0; i<=n; i++) a[i]=1;
   for(int k=2; k<=n; k++)
@@ -138,8 +132,7 @@ void calculate_1d(int n) {
       a[i] += a[i-k];
 }
 
-void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
-{
+void printArray(int Ar3[MAX+1][MAX+1][MAX+1]){
     int p=1;
     while(Ar3[1][1][p]!=0)
     {
@@ -160,9 +153,7 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
     printf("shape\n");
 }
 
-
- void shapeArray(int p1[], int n1)
-{
+ void shapeArray(int p1[], int n1){
     if(n1<=k)
     {
     for(int i=1;i<=n1;i++)
@@ -218,8 +209,7 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
     }
 }
 
-void shapeParts(int n1)
-{
+void shapeParts(int n1){
     if(n1<0)
         return;
     if(n1==0)
@@ -277,14 +267,61 @@ void shapeParts(int n1)
 
 //TODO: Create BM function
 
+bool exist(tp e){
+  for(int i=0;i<to;i++){
+    if(poss[i]==e)
+      return true;
+  }
+  return false;
+}
+void update_poss(int x,int y,int z){
+  ll c2 = cc2[x][y][z]+1;
 
+  if((possible(p, q, r, c2)) &!(exist(c2))) {
+    poss[to]={x,y,z};
+    to++;
+  }
+
+  c2 = cc2[x+1][y][z]+1;
+
+  if((possible(p, q, r, c2)) &!(exist(c2))) {
+    poss[to]={x+1,y,z};
+    to++;
+  }
+
+  c2 = cc2[x][y+1][z]+1;
+
+  if((possible(p, q, r, c2)) &!(exist(c2))) {
+    poss[to]={x,y+1,z};
+    to++;
+  }
+
+  c2 = cc2[x][y][z+1]+1;
+
+  if((possible(p, q, r, c2)) &!(exist(c2))) {
+    poss[to]={x,y,z+1};
+    to++;
+  }
+}
+void bm() {
+  if( k2+curidx2+ n) return;
+
+  if(!(x2[k2].tr==origin))
+    d2[k2+curidx2]++;
+
+  tpp th = poss[iter];
+
+  c = cc2[th.x][th.y][th.z]+1;
+  include(p, q, r, c);
+  update_poss(th.x,th.y,th.z);
+  bm();
+}
 
 bool possible(int x, int y, int z) {
   if(x>1 && cc[x-1][y] < z) return 0;
   if(y>1 && cc[x][y-1] < z) return 0;
   return 1;
 }
-
 void include(int p, int y, int z) {
   k++;
   cc[p][y] = z;
@@ -302,8 +339,6 @@ void exclude(int p, int y, int z) {
     cc[p][y]--;
     k--;
 }
-
-
 void printconfig() {
 
     memset(shape, 0, sizeof(shape));
@@ -316,8 +351,6 @@ void printconfig() {
     shapeParts(n-curidx-k);
 
  }
-
-
 void gen() {
   if(curidx + k > n) return;
 
@@ -341,7 +374,6 @@ void gen() {
     if(cc[p][1] == 0) break;
   }
 }
-
 void generate_topological_sequences(int nn) {
   memset(cc, 0, sizeof(cc));
   memset(d, 0, sizeof(d));
@@ -354,15 +386,12 @@ void generate_topological_sequences(int nn) {
   n = nn;
   gen();
 }
-
-
 void calculate_3d_correct(int n) {
   memset(c, 0, sizeof(c));
   for(int i=1; i<=n; i++) {
     for(int j=0; j<=i; j++) c[i] += (a[j]*d[i-j]);
   }
 }
-
 int main() {
   printf("Enter N: ");
   int N; scanf("%d", &N);
