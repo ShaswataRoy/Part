@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <utility>
+#include <ctime>
 
 using namespace std;
 
@@ -22,12 +23,9 @@ int curidx;
 int count=0;
 int shape[MAX+1][MAX+1][MAX+1];
 vector<int> indx;
-ll d2[MAX+1];
-int cc2[MAX+1][MAX+1][MAX+1];
-int k2,curidx2;
-ll a[MAX+1];
 
-struct tp{
+struct tp
+{
     int x;
     int y;
     int z;
@@ -40,7 +38,8 @@ struct tp{
     }
 };
 
-struct tpp{
+struct tpp
+{
     tp tr;
     int t;
 
@@ -60,8 +59,12 @@ struct tpp{
     }
 };
 
+
+ll d2[MAX+1];
+int cc2[MAX+1][MAX+1][MAX+1];
 tpp x2[MAX+1];
 tp origin={1,1,1};
+int k2,curidx2;
 
 bool possible(int x, int y, int z,int t) {
   if(x>1 && cc2[x-1][y][z] < t) return 0;
@@ -83,9 +86,11 @@ void exclude(int p, int y, int z,int t) {
   if(x2[k2-1] > x2[k2]){
       curidx2 -= (k2-1);
   }
-  cc2[p][y][z]--;
-  k2--;
+cc2[p][y][z]--;
+k2--;
 }
+
+
 
 void gen2() {
   if( k2 > n) return;
@@ -125,6 +130,8 @@ void generate_topological_sequences2() {
   gen2();
 }
 
+ll a[MAX+1];
+
 void calculate_1d(int n) {
   for(int i=0; i<=n; i++) a[i]=1;
   for(int k=2; k<=n; k++)
@@ -132,7 +139,8 @@ void calculate_1d(int n) {
       a[i] += a[i-k];
 }
 
-void printArray(int Ar3[MAX+1][MAX+1][MAX+1]){
+void printArray(int Ar3[MAX+1][MAX+1][MAX+1])
+{
     int p=1;
     while(Ar3[1][1][p]!=0)
     {
@@ -153,7 +161,9 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1]){
     printf("shape\n");
 }
 
- void shapeArray(int p1[], int n1){
+
+ void shapeArray(int p1[], int n1)
+{
     if(n1<=k)
     {
     for(int i=1;i<=n1;i++)
@@ -209,7 +219,8 @@ void printArray(int Ar3[MAX+1][MAX+1][MAX+1]){
     }
 }
 
-void shapeParts(int n1){
+void shapeParts(int n1)
+{
     if(n1<0)
         return;
     if(n1==0)
@@ -219,21 +230,13 @@ void shapeParts(int n1){
         count++;
         return;
     }
-    int p[n1]; // An array to store a partition
-    int k1 = 0;  // Index of last element in a partition
-    p[k1] = n1;  // Initialize first partition as number itself
+    int p[n1];
+    int k1 = 0;
+    p[k1] = n1;
 
-    // This loop first prints current partition, then generates next
-    // partition. The loop stops when the current partition has all 1s
     while (true)
     {
-        // print current partition
         shapeArray(p, k1+1);
-
-        // Generate next partition
-
-        // Find the rightmost non-one value in p[]. Also, update the
-        // rem_val so that we know how much value can be accommodated
         int rem_val = 0;
         while (k1 >= 0 && p[k1] == 1)
         {
@@ -241,25 +244,17 @@ void shapeParts(int n1){
             k1--;
         }
 
-        // if k < 0, all the values are 1 so there are no more partitions
         if (k1 < 0)  return;
 
-        // Decrease the p[k] found above and adjust the rem_val
         p[k1]--;
         rem_val++;
 
-
-        // If rem_val is more, then the sorted order is violeted.  Divide
-        // rem_val in differnt values of size p[k] and copy these values at
-        // different positions after p[k]
         while (rem_val > p[k1])
         {
             p[k1+1] = p[k1];
             rem_val = rem_val - p[k1];
             k1++;
         }
-
-        // Copy rem_val to next position and increment position
         p[k1+1] = rem_val;
         k1++;
     }
@@ -267,61 +262,14 @@ void shapeParts(int n1){
 
 //TODO: Create BM function
 
-bool exist(tp e){
-  for(int i=0;i<to;i++){
-    if(poss[i]==e)
-      return true;
-  }
-  return false;
-}
-void update_poss(int x,int y,int z){
-  ll c2 = cc2[x][y][z]+1;
 
-  if((possible(p, q, r, c2)) &!(exist(c2))) {
-    poss[to]={x,y,z};
-    to++;
-  }
-
-  c2 = cc2[x+1][y][z]+1;
-
-  if((possible(p, q, r, c2)) &!(exist(c2))) {
-    poss[to]={x+1,y,z};
-    to++;
-  }
-
-  c2 = cc2[x][y+1][z]+1;
-
-  if((possible(p, q, r, c2)) &!(exist(c2))) {
-    poss[to]={x,y+1,z};
-    to++;
-  }
-
-  c2 = cc2[x][y][z+1]+1;
-
-  if((possible(p, q, r, c2)) &!(exist(c2))) {
-    poss[to]={x,y,z+1};
-    to++;
-  }
-}
-void bm() {
-  if( k2+curidx2+ n) return;
-
-  if(!(x2[k2].tr==origin))
-    d2[k2+curidx2]++;
-
-  tpp th = poss[iter];
-
-  c = cc2[th.x][th.y][th.z]+1;
-  include(p, q, r, c);
-  update_poss(th.x,th.y,th.z);
-  bm();
-}
 
 bool possible(int x, int y, int z) {
   if(x>1 && cc[x-1][y] < z) return 0;
   if(y>1 && cc[x][y-1] < z) return 0;
   return 1;
 }
+
 void include(int p, int y, int z) {
   k++;
   cc[p][y] = z;
@@ -334,11 +282,13 @@ void include(int p, int y, int z) {
 void exclude(int p, int y, int z) {
   if(x[k-1] > x[k]){
     indx.pop_back();
-    curidx -= (k-1);// if x[k-1] is interesting, removal of x[k] needs us to decrement current index (curidx) by (k-1)
+    curidx -= (k-1);
     }
     cc[p][y]--;
     k--;
 }
+
+
 void printconfig() {
 
     memset(shape, 0, sizeof(shape));
@@ -351,6 +301,8 @@ void printconfig() {
     shapeParts(n-curidx-k);
 
  }
+
+
 void gen() {
   if(curidx + k > n) return;
 
@@ -374,6 +326,7 @@ void gen() {
     if(cc[p][1] == 0) break;
   }
 }
+
 void generate_topological_sequences(int nn) {
   memset(cc, 0, sizeof(cc));
   memset(d, 0, sizeof(d));
@@ -386,15 +339,20 @@ void generate_topological_sequences(int nn) {
   n = nn;
   gen();
 }
+
+
 void calculate_3d_correct(int n) {
   memset(c, 0, sizeof(c));
   for(int i=1; i<=n; i++) {
     for(int j=0; j<=i; j++) c[i] += (a[j]*d[i-j]);
   }
 }
+
 int main() {
   printf("Enter N: ");
+
   int N; scanf("%d", &N);
+  clock_t begin = clock();
   generate_topological_sequences(N);
   calculate_1d(N);
   calculate_3d_correct(N);
@@ -403,22 +361,21 @@ int main() {
 
   memset(shape,0,sizeof(shape));
   shapeParts(N);
-
+  clock_t end = clock();
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
   printf("d[i] = no. of topological sequences of index i\n");
-  for(int i=0; i<=N; i++) printf("d[%d] = %lld\n", i, d[i]);
+  for(int i=0; i<=N; i++) printf("d3[%d] = %lld\n", i, d[i]);
   printf("c[i] = no. of 3d partitions of i\n");
-  for(int i=1; i<=N; i++) printf("c[%d] = %lld\n", i, c[i]);
-  //shapeParts(0);
-  printf("Is it though?? = %d\n", count);
-
-  cout<<"\n Let's see:\n";
+  for(int i=1; i<=N; i++) printf("c3[%d] = %lld\n", i, c[i]);
+  //printf("Is it though?? = %d\n", count);
 
 
-  printf("Number of topos of given shape:");
+  printf("\nNumber of topos of given shape:\n");
   for(int i=1;i<=100;i++)
   {
       if(d2[i]!=0)
-          printf("d[%d] = %lld\n", i, d2[i]);
+          printf("d4[%d] = %lld\n", i, d2[i]);
   }
+  printf("\n Time taken:%.3f", elapsed_secs);
 }

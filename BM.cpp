@@ -120,7 +120,7 @@ int main() {
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
-  //printf("\nc[i] = no. of 2D partitions of i\n");
-  //for(int i=0; i<=N; i++) printf("c[%d] = %lld\n", i, d[i]);
+  printf("\nc[i] = no. of 2D partitions of i\n");
+  for(int i=0; i<=N; i++) printf("c[%d] = %lld\n", i, d[i]);
   printf("\nTime taken:%.3f", elapsed_secs);
 }
